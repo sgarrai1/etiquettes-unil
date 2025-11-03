@@ -1,0 +1,44 @@
+﻿nom,omod,nom_normalisé,couleur
+Acide sulfurique et acide sulfureux,06 01 01,acide sulfurique et acide sulfureux,#D32F2F
+Acide chlorhydrique,06 01 02,acide chlorhydrique,#D32F2F
+Acide phosphorique et acide phosphoreux,06 01 04,acide phosphorique et acide phosphoreux,#D32F2F
+Acide nitrique et acide nitreux,06 01 05,acide nitrique et acide nitreux,#D32F2F
+Acide fluorhydrique,06 01 03,acide fluorhydrique,#D32F2F
+Autres acides,06 01 06,autres acides,#D32F2F
+Hydroxyde d'ammonium,06 02 03,hydroxyde d'ammonium,#64B5F6
+Hydroxyde de sodium et hydroxyde de potassium,06 02 04,hydroxyde de sodium et hydroxyde de potassium,#64B5F6
+Autres bases,06 02 05,autres bases,#64B5F6
+Sels solides et solutions contenant des cyanures,06 03 11,sels solides et solutions contenant des cyanures,#64B5F6
+Sels solides et solutions contenant des métaux lourds,06 03 13,sels solides et solutions contenant des metaux lourds,#E0E0E0
+Arsenic,06 04 03,arsenic,#E0E0E0
+Mercure,06 04 04,mercure,#E0E0E0
+Déchets agrochimiques contenant des substances dangereuses,02 01 08,dechets agrochimiques contenant des substances dangereuses
+Sel solide et solutions autre que ceux visés aux rubriques 06 03 11 ou 06 03 13,06 03 14,sel solide et solutions autre que ceux vises aux rubriques 06 03 11 ou 06 03 13
+Déchets contenant d'autres métaux lourds,06 04 05,dechets contenant d'autres metaux lourds,#E0E0E0
+Charbon actif utilisé pour la production du chlore, 06 07 02,charbon actif utilise pour la production du chlore,#FFEB3B
+Eaux de lavage et liqueurs mères aqueuses produits organique,07 01 01,eaux de lavage et liqueurs meres aqueuses produits organique,#D7BDE2
+Solvants liquides de lavage et liqueurs mères organiques halogénés,07 01 03,solvants liquides de lavage et liqueurs meres organiques halogenes,#FFEB3B
+Autres solvants liquides de lavage et liqueurs mères organiques,07 01 04,autres solvants liquides de lavage et liqueurs meres organiques,#D7BDE2
+Eaux de lavage et liqueurs mères aqueuses origine pharma,07 05 01,eaux de lavage et liqueurs meres aqueuses origine pharma,#D7BDE2
+Solvants liquides de lavage et liqueurs mères organiques halogénés pharma,07 07 03,solvants liquides de lavage et liqueurs meres organiques halogenes pharma,#FFEB3B
+Autres solvants liquides de lavage et liqueurs mères organiques pharma,07 07 04,autres solvants liquides de lavage et liqueurs meres organiques pharma,#A5D6A7
+Déchets de peintures ou de vernis autres que ceux visés à la rubrique 08 01 11,08 01 12,dechets de peintures ou de vernis autres que ceux vises a la rubrique 08 01 11,#A5D6A7
+Déchets de colles et de mastics contenant des solvants organiques ou d'autres substances dangereuses,08 04 09,dechets de colles et de mastics contenant des solvants organiques ou d'autres substances dangereuses
+Bains de fixation,09 01 04,bains de fixation
+Autres huiles de moteur de boîte de vitesses et de lubrification (y compris les mélanges d'huiles minérales),13 02 08,autres huiles de moteur de boite de vitesses et de lubrification (y compris les melanges d'huiles minerales)
+Emballages contenant des résidus de substances dangereuses ou de déchets spéciaux et emballages contaminés par des substances dangereuses ou des déchets spéciaux, 15 01 10,emballages contenant des residus de substances dangereuses ou de dechets speciaux et emballages contamines par des substances dangereuses ou des dechets speciaux
+Absorbants matériaux filtrants (y compris les filtres à huile non spécifiés ailleurs) chiffons d'essuyage et vêtements de protection contaminés par des substances dangereuses,15 02 02,absorbants materiaux filtrants (y compris les filtres a huile non specifies ailleurs) chiffons d'essuyage et vetements de protection contamines par des substances dangereuses
+Filtres à huile,16 01 07,filtres a huile
+Déchets d’origine organique contenant des substances dangereuses,16 03 05,dechets dorigine organique contenant des substances dangereuses
+Gaz en récipients à pression (y compris les halons) contenant des substances dangereuses,16 05 04,gaz en recipients a pression (y compris les halons) contenant des substances dangereuses
+Produits chimiques de laboratoire composés de substances dangereuses ou contenant de telles substances y compris les mélanges de produits chimiques de laboratoire, 16 05 06,produits chimiques de laboratoire composes de substances dangereuses ou contenant de telles substances y compris les melanges de produits chimiques de laboratoire
+Déchets de produits chimiques dont la composition n’est pas connue,16 05 98,dechets de produits chimiques dont la composition nest pas connue
+Piles ou accumulateurs mélangés,16 06 98,piles ou accumulateurs melanges
+Déchets liquides aqueux contenant des substances dangereuses,16 10 01,dechets liquides aqueux contenant des substances dangereuses,#D7BDE2
+Matériaux terreux issus du décapage de la couche supérieure et de la couche sous-jacente du sol contaminés par des substances dangereuses,17 05 03,materiaux terreux issus du decapage de la couche superieure et de la couche sous-jacente du sol contamines par des substances dangereuses
+Déchets présentant un danger de blessure (objets piquants ou coupants - « sharps ») autres que ceux visés à la rubrique 18 01 03,18 01 01,dechets presentant un danger de blessure (objets piquants ou coupants -  sharps ) autres que ceux vises a la rubrique 18 01 03
+Déchets présentant un danger de contamination (par exemple déchets de tissus déchets contenant du sang des sécrétions ou des excrétions sacs de sang et réserves de sang),18 01 02,dechets presentant un danger de contamination (par exemple dechets de tissus dechets contenant du sang des secretions ou des excretions sacs de sang et reserves de sang)
+Déchets dont la collecte et l'élimination ne font pas l'objet de prescriptions particulières pour prévenir les infections (par exemple pansements plâtres draps vêtements jetables langes),18 01 04,dechets dont la collecte et l'elimination ne font pas l'objet de prescriptions particulieres pour prevenir les infections (par exemple pansements platres draps vetements jetables langes)
+Produits chimiques composés de substances dangereuses ou contenant de telles substances,18 01 06,produits chimiques composes de substances dangereuses ou contenant de telles substances
+Sources lumineuses contenant du mercure,20 01 21,sources lumineuses contenant du mercure
+Peintures encres colles et résines contenant des substances dangereuses,20 01 27,peintures encres colles et resines contenant des substances dangereuses
