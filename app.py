@@ -191,7 +191,7 @@ else:
 # ---------------------------
 # DESSIN D’UNE ÉTIQUETTE
 # ---------------------------
-def dessiner_etiquette(c, x0, y0, w, h, d, pictos):
+def dessiner_etiquette(c, x0, y0, w, h, d, pictos, picto_scale=1.0, text_scale=1.0):
     from reportlab.lib.colors import HexColor
     c.saveState()
     s = h / (100 * mm)
@@ -214,7 +214,7 @@ def dessiner_etiquette(c, x0, y0, w, h, d, pictos):
         c.drawImage(ImageReader(logo_path), lx, ly, width=logo_w, height=logo_h, mask='auto')
 
     # N° remettant
-    c.setFont("Helvetica-Bold", 9 * s)
+    c.setFont("Helvetica-Bold", 9 * s * text_scale)
     c.drawString(x0 + 0.55 * w, bandeau_y + bandeau_h / 2 - 4 * s, f"N° remettant : {d['num_remettant']}")
 
     # Zone colorée du nom
@@ -227,31 +227,23 @@ def dessiner_etiquette(c, x0, y0, w, h, d, pictos):
     c.setFillColorRGB(0, 0, 0)
 
     # Nom du produit
-    c.setFont("Helvetica-Bold", 10 * s)
+    c.setFont("Helvetica-Bold", 11 * s * text_scale)
     produit = str(d["nom"]).strip()
     max_len = 35
     lignes_nom = [produit[i:i + max_len] for i in range(0, len(produit), max_len)]
     for i, ligne in enumerate(lignes_nom[:2]):
         c.drawCentredString(x0 + w / 4, y0 + h - 0.26 * h - i * (0.035 * h), ligne)
 
-    c.setFont("Helvetica-Bold", 11 * s)
-    c.drawCentredString(
-        x0 + 3 * w / 4,              # Position horizontale (à droite)
-        y0 + h - 0.30 * h,           # Plus haut qu'avant pour éviter les pictos
-        f"Code OMoD : {d['omod']}"
-    )
-
-    # Pictogrammes — décalés à droite
+    # Pictogrammes
     nb_pictos = min(len(pictos), 6)
     if nb_pictos > 0:
-        picto_size = 0.12 * h
+        picto_size = 0.12 * h * picto_scale
         cols = 3
-        rows = (nb_pictos + cols - 1) // cols
         spacing_x = 0.02 * w
         spacing_y = 0.02 * h
         total_row_w = cols * picto_size + (cols - 1) * spacing_x
         start_x = x0 + (w / 2) + ((w / 2 - total_row_w) / 2)
-        base_y = y0 + h - 0.52 * h
+        base_y = y0 + h - 0.55 * h  # légèrement descendu
 
         for i, picto in enumerate(pictos[:6]):
             r = i // cols
@@ -262,8 +254,8 @@ def dessiner_etiquette(c, x0, y0, w, h, d, pictos):
             if os.path.exists(path):
                 c.drawImage(ImageReader(path), px, py, width=picto_size, height=picto_size, mask='auto')
 
-    # Texte d’informations
-    c.setFont("Helvetica", 10 * s)
+    # Texte infos
+    c.setFont("Helvetica", 10 * s * text_scale)
     base_y = y0 + 0.18 * h
     c.drawString(x0 + 0.07 * w, base_y + 0.21 * h, f"Faculté : {d['faculte']}")
     c.drawString(x0 + 0.07 * w, base_y + 0.14 * h, f"Nom : {d['nom_createur']}")
@@ -301,15 +293,18 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None, lw_mm=140, lh_mm
         page_format = landscape(A4)
         cols, rows, nb_max = 2, 2, 4
         x_start, y_start, x_gap, y_gap = 5 * mm, 10 * mm, 10 * mm, 10 * mm
-    else:
+        decalage_x, decalage_y = 0, 0
+        picto_scale, text_scale = 1.0, 1.0
+    else:  # format moyen
         page_format = portrait(A4)
         cols, rows, nb_max = 2, 4, 8
         x_start, y_start, x_gap, y_gap = 10 * mm, 10 * mm, 5 * mm, 5 * mm
+        decalage_x, decalage_y = -5 * mm, -5 * mm
+        picto_scale, text_scale = 1.25, 1.15
 
     page_w, page_h = page_format
     lw, lh = lw_mm * mm, lh_mm * mm
 
-    # 🔁 renommage automatique si fichier déjà ouvert
     base_filename = f"etiquettes_{normalize_text(donnees['nom'])}.pdf"
     filename = base_filename
     i = 1
@@ -322,8 +317,8 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None, lw_mm=140, lh_mm
     positions = []
     for r in range(rows):
         for cl in range(cols):
-            x = x_start + cl * (lw + x_gap)
-            y = y_start + r * (lh + y_gap)
+            x = x_start + cl * (lw + x_gap) + decalage_x
+            y = y_start + r * (lh + y_gap) + decalage_y
             positions.append((x, page_h - y - lh))
 
     total = nb
@@ -332,7 +327,7 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None, lw_mm=140, lh_mm
         for (x0, y0) in positions:
             if current >= total:
                 break
-            dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
+            dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos, picto_scale, text_scale)
             current += 1
         if current < total:
             c.showPage()
@@ -387,5 +382,215 @@ if st.button("🧾 Générer le PDF"):
     st.success(f"✅ Étiquettes générées pour {nom_final}")
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+    # Nom du produit — coupé automatiquement en 2 lignes max
+    max_len = 35
+    lignes_nom = [produit[i:i + max_len] for i in range(0, len(produit), max_len)]
+    for i, ligne in enumerate(lignes_nom[:2]):
+        c.drawCentredString(
+            x0 + w / 4,                      # zone gauche
+            y0 + h - 0.26 * h - i * (0.035 * h),
+            ligne
+        )
+
+    # ➕ AJOUT : Code OMoD (corrigé & bien positionné)
+    c.setFont("Helvetica-Bold", 10 * s)
+    c.drawCentredString(
+        x0 + 3 * w / 4,                     # zone droite
+        y0 + h - 0.26 * h,                  # même hauteur que le nom du produit
+        f"Code OMoD : {d['omod']}"
+    )
+
+    # ---------------------------
+    # PICTOGRAMMES (à droite, 2 lignes × 3 pictos)
+    # ---------------------------
+    nb_pictos = min(len(pictos), 6)
+    if nb_pictos > 0:
+        picto_size = 0.12 * h
+        cols = 3
+        spacing_x = 0.02 * w
+        spacing_y = 0.02 * h
+        total_row_w = cols * picto_size + (cols - 1) * spacing_x
+
+        # Centrage horizontal dans la moitié droite
+        start_x = x0 + (w / 2) + ((w / 2 - total_row_w) / 2)
+
+        # Position verticale ajustée
+        base_y = y0 + h - 0.52 * h
+
+        for i, picto in enumerate(pictos[:6]):
+            r = i // cols     # ligne
+            cidx = i % cols   # colonne
+            px = start_x + cidx * (picto_size + spacing_x)
+            py = base_y - r * (picto_size + spacing_y)
+
+            path = f"pictos/{picto}.png"
+            if os.path.exists(path):
+                c.drawImage(
+                    ImageReader(path),
+                    px, py,
+                    width=picto_size,
+                    height=picto_size,
+                    mask='auto'
+                )
+
+    # ---------------------------
+    # BLOCS INFOS FACULTÉ / NOM / DATE
+    # ---------------------------
+    c.setFont("Helvetica", 10 * s)
+    base_y = y0 + 0.18 * h
+
+    c.drawString(x0 + 0.07 * w, base_y + 0.21 * h, f"Faculté : {d['faculte']}")
+    c.drawString(x0 + 0.07 * w, base_y + 0.14 * h, f"Nom : {d['nom_createur']}")
+    c.drawString(x0 + 0.07 * w, base_y + 0.07 * h, f"Prénom : {d['prenom_createur']}")
+    c.drawString(x0 + 0.07 * w, base_y + 0.00 * h, f"Date : {d['date']}")
+
+    # ---------------------------
+    # DONNÉES SUPPLÉMENTAIRES
+    # ---------------------------
+    texte = str(d.get("infos_sup", "")).strip()
+
+    # Limite à 100 caractères
+    if len(texte) > 100:
+        texte = texte[:100] + "…"
+
+    if texte:
+        y_start = base_y - 0.03 * h
+        c.drawString(x0 + 0.07 * w, y_start, "Données supplémentaires :")
+
+        mots = texte.split()
+        lignes_sup = []
+        ligne = ""
+
+        for mot in mots:
+            if len((ligne + " " + mot).strip()) <= 45:
+                ligne = (ligne + " " + mot).strip()
+            else:
+                lignes_sup.append(ligne)
+                ligne = mot
+
+        if ligne:
+            lignes_sup.append(ligne)
+
+        for i, l in enumerate(lignes_sup[:5]):
+            c.drawString(x0 + 0.10 * w, y_start - (i + 1) * (0.045 * h), l)
+
+    c.restoreState()
+# ---------------------------
+# GÉNÉRATION DU PDF
+# ---------------------------
+def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None,
+                           lw_mm=140, lh_mm=100, format_code="grand"):
+
+    # Format GRAND : A4 paysage → 2 × 2
+    if format_code == "grand":
+        page_format = landscape(A4)
+        cols, rows = 2, 2
+        x_start, y_start = 5 * mm, 10 * mm
+        x_gap, y_gap = 10 * mm, 10 * mm
+        nb_max = 4
+
+    # Format MOYEN : A4 portrait → 2 × 4
+    else:
+        page_format = portrait(A4)
+        cols, rows = 2, 4
+        x_start, y_start = 10 * mm, 10 * mm
+        x_gap, y_gap = 5 * mm, 5 * mm
+        nb_max = 8
+
+    page_w, page_h = page_format
+
+    lw, lh = lw_mm * mm, lh_mm * mm
+
+    # 🔁 Renommage automatique si fichier déjà présent (évite PermissionError)
+    base_filename = f"etiquettes_{normalize_text(donnees['nom'])}.pdf"
+    filename = base_filename
+    i = 1
+    while os.path.exists(filename):
+        filename = f"etiquettes_{normalize_text(donnees['nom'])}_{i}.pdf"
+        i += 1
+
+    c = canvas.Canvas(filename, pagesize=page_format)
+
+    # Calcul des positions sur la page
+    positions = []
+    for r in range(rows):
+        for cl in range(cols):
+            x = x_start + cl * (lw + x_gap)
+            y = y_start + r * (lh + y_gap)
+            positions.append((x, page_h - y - lh))
+
+    total = nb
+    current = 0
+
+    while current < total:
+        for (x0, y0) in positions:
+            if current >= total:
+                break
+            dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
+            current += 1
+
+        if current < total:
+            c.showPage()
+
+    c.save()
+    return filename
 
 
+# ---------------------------
+# BOUTON DE GÉNÉRATION
+# ---------------------------
+if st.button("🧾 Générer le PDF"):
+    utilise_base = st.session_state.choix_produit is not None
+
+    # Vérifications
+    if not utilise_base and (not nom_manuel.strip() or not omod_manuel.strip()):
+        st.error("❌ Saisir un nom et un code OMoD ou choisir un produit existant.")
+        st.stop()
+    if not faculte or not nom_createur or not prenom_createur or not date:
+        st.error("❌ Tous les champs faculté, nom, prénom et date sont obligatoires.")
+        st.stop()
+    if len(pictos_selectionnes) == 0:
+        st.error("❌ Sélectionnez au moins un pictogramme SGH.")
+        st.stop()
+
+    # Cas produit venant de la base
+    if utilise_base:
+        sel = st.session_state.choix_produit
+        m = produits[produits["nom"] == sel].iloc[0]
+        nom_final = str(m["nom"])
+        omod_final = str(m["omod"])
+        couleur_fond = m.get("couleur", "#FFFFFF")
+
+    # Cas saisie manuelle
+    else:
+        nom_final = nom_manuel.strip()
+        omod_final = omod_manuel.strip()
+        couleur_fond = COULEURS_CATEGORIES.get(categorie_couleur, "#FFFFFF")
+
+    # Données utilisées pour générer l’étiquette
+    donnees = {
+        "nom": nom_final,
+        "omod": omod_final,
+        "faculte": faculte,
+        "num_remettant": num_remettant,
+        "nom_createur": nom_createur,
+        "prenom_createur": prenom_createur,
+        "date": date.strftime("%d/%m/%Y"),
+        "infos_sup": infos_sup,
+        "couleur_fond": couleur_fond
+    }
+
+    fichier = generer_etiquettes_pdf(
+        donnees,
+        pictos_selectionnes,
+        nb_etiquettes,
+        positions_selectionnees,
+        largeur_etiquette_mm,
+        hauteur_etiquette_mm,
+        format_code
+    )
+
+    st.success(f"✅ Étiquettes générées pour : {nom_final}")
+
+    with open(fichier, "rb") as f:
+        st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
