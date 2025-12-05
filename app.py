@@ -234,6 +234,13 @@ def dessiner_etiquette(c, x0, y0, w, h, d, pictos):
     for i, ligne in enumerate(lignes_nom[:2]):
         c.drawCentredString(x0 + w / 4, y0 + h - 0.26 * h - i * (0.035 * h), ligne)
 
+    c.setFont("Helvetica-Bold", 10 * s)
+    c.drawCentredString(
+        x0 + 3 * w / 4,              # côté droit
+        y0 + h - 0.26 * h,           # aligné horizontalement au nom
+        f"Code OMoD : {d['omod']}"
+    )
+
     # Pictogrammes — décalés à droite
     nb_pictos = min(len(pictos), 6)
     if nb_pictos > 0:
@@ -380,3 +387,4 @@ if st.button("🧾 Générer le PDF"):
     st.success(f"✅ Étiquettes générées pour {nom_final}")
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
