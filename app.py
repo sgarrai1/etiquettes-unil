@@ -347,18 +347,27 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None,
             y = y_start + r * (lh + y_gap)
             positions.append((x, page_h - y - lh))
 
-    total = nb
-    current = 0
+   # --- Si format GRAND, on respecte les positions sélectionnées ---
+if format_code == "grand" and pos_sel:
+    # pos_sel contient [1,2,3,4] -> on convertit en index 0..3
+    ordre_positions = [positions[i - 1] for i in pos_sel if 1 <= i <= len(positions)]
+else:
+    # sinon on remplit dans l’ordre normal
+    ordre_positions = positions
 
-    while current < total:
-        for (x0, y0) in positions:
-            if current >= total:
-                break
-            dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
-            current += 1
+total = nb
+current = 0
 
-        if current < total:
-            c.showPage()
+while current < total:
+    for (x0, y0) in ordre_positions:
+        if current >= total:
+            break
+        dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
+        current += 1
+
+    if current < total:
+        c.showPage()
+ 
 
     c.save()
     return filename
@@ -419,3 +428,4 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
