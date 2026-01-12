@@ -359,8 +359,8 @@ else:
 for (x0, y0) in positions_a_imprimer:
     dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
 
-        c.save()
-        return filename
+c.save()
+return filename
 
 
 # ---------------------------
@@ -431,6 +431,7 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
 
 
 
