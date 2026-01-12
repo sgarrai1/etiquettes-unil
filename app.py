@@ -348,19 +348,19 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None,
             positions.append((x, page_h - y - lh))
 
    # --- FORMAT GRAND : on imprime UNIQUEMENT aux positions choisies ---
-if format_code == "grand" and pos_sel:
-    # pos_sel = [1,2,3,4] -> positions indexées 0..3
-    positions_a_imprimer = [positions[p - 1] for p in pos_sel if 1 <= p <= len(positions)]
-else:
-    # autres formats : remplissage automatique
-    positions_a_imprimer = positions[:nb]
+    if format_code == "grand" and pos_sel:
+        # pos_sel = [1,2,3,4] -> positions indexées 0..3
+        positions_a_imprimer = [positions[p - 1] for p in pos_sel if 1 <= p <= len(positions)]
+    else:
+        # autres formats : remplissage automatique
+        positions_a_imprimer = positions[:nb]
 
-# Dessin : une seule page pour grand (max 4)
-for (x0, y0) in positions_a_imprimer:
-    dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
+    # Dessin : une seule page pour grand (max 4)
+    for (x0, y0) in positions_a_imprimer:
+        dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
 
-c.save()
-return filename
+    c.save()
+    return filename
 
 
 # ---------------------------
@@ -431,6 +431,7 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
 
 
 
