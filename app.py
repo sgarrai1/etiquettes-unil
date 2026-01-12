@@ -187,7 +187,7 @@ if format_code == "grand":
         "Position(s) sur la page :",
         options=list(positions_dict.keys()),
         format_func=lambda x: positions_dict[x],
-        default=list(range(1, min(nb_etiquettes, 4) + 1))
+        default=[]
     )
 else:
     st.info("🧾 Pour ce format, les étiquettes seront placées automatiquement sur la feuille A4.")
@@ -347,27 +347,17 @@ def generer_etiquettes_pdf(donnees, pictos, nb=4, pos_sel=None,
             y = y_start + r * (lh + y_gap)
             positions.append((x, page_h - y - lh))
 
-   # --- Si format GRAND, on respecte les positions sélectionnées ---
+   # --- FORMAT GRAND : on imprime UNIQUEMENT aux positions choisies ---
 if format_code == "grand" and pos_sel:
-    # pos_sel contient [1,2,3,4] -> on convertit en index 0..3
-    ordre_positions = [positions[i - 1] for i in pos_sel if 1 <= i <= len(positions)]
+    # pos_sel = [1,2,3,4] -> positions indexées 0..3
+    positions_a_imprimer = [positions[p - 1] for p in pos_sel if 1 <= p <= len(positions)]
 else:
-    # sinon on remplit dans l’ordre normal
-    ordre_positions = positions
+    # autres formats : remplissage automatique
+    positions_a_imprimer = positions[:nb]
 
-total = nb
-current = 0
-
-while current < total:
-    for (x0, y0) in ordre_positions:
-        if current >= total:
-            break
-        dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
-        current += 1
-
-    if current < total:
-        c.showPage()
- 
+# Dessin : une seule page pour grand (max 4)
+for (x0, y0) in positions_a_imprimer:
+    dessiner_etiquette(c, x0, y0, lw, lh, donnees, pictos)
 
     c.save()
     return filename
@@ -414,6 +404,15 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
         "couleur_fond": couleur_fond
     }
 
+    if format_code == "grand":
+    if not positions_selectionnees:
+        st.error("❌ Pour le format grand, choisissez au moins une position sur la page.")
+        st.stop()
+
+    if nb_etiquettes != len(positions_selectionnees):
+        st.error("❌ Pour le format grand, le nombre d’étiquettes doit être égal au nombre de positions sélectionnées.")
+        st.stop()
+
     fichier = generer_etiquettes_pdf(
         donnees,
         pictos_selectionnes,
@@ -428,4 +427,5 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
 
