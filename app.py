@@ -405,13 +405,17 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
     }
 
     if format_code == "grand":
-    if not positions_selectionnees:
-        st.error("❌ Pour le format grand, choisissez au moins une position sur la page.")
-        st.stop()
+        if not positions_selectionnees:
+            st.error("❌ Pour le format grand, choisissez au moins une position sur la page.")
+            st.stop()
 
-    if nb_etiquettes != len(positions_selectionnees):
-        st.error("❌ Pour le format grand, le nombre d’étiquettes doit être égal au nombre de positions sélectionnées.")
-        st.stop()
+        if nb_etiquettes != len(positions_selectionnees):
+            st.error(
+                "❌ Pour le format grand, le nombre d’étiquettes doit être égal "
+                "au nombre de positions sélectionnées."
+            )
+            st.stop()
+
 
     fichier = generer_etiquettes_pdf(
         donnees,
@@ -427,5 +431,6 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
 
 
