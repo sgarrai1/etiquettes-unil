@@ -6,6 +6,8 @@ from reportlab.lib.units import mm
 from reportlab.lib.utils import ImageReader
 import os
 import unicodedata
+st.caption("✅ Version app.py : 26.01.2026 — positions GRAND+MOYEN activées")
+
 
 
 # ---------------------------
@@ -440,6 +442,7 @@ if st.button("🧾 Générer le PDF", key="btn_generer_pdf"):
 
     with open(fichier, "rb") as f:
         st.download_button("📄 Télécharger le PDF", f, file_name=fichier)
+
 
 
 
